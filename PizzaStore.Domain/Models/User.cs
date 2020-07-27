@@ -4,11 +4,14 @@ namespace PizzaStore.Domain.Models
 {
     public class User
     {
-        public List<Order> Orders { get; }
+        private List<Order> _orders = new List<Order>();
 
-        public User()
+        public List<Order> Orders
         {
-            Orders = new List<Order>();
+            get
+            {
+                return _orders;
+            }
         }
     }
 }

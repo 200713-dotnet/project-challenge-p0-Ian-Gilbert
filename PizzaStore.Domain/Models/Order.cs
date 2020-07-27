@@ -4,16 +4,40 @@ namespace PizzaStore.Domain.Models
 {
     public class Order
     {
-        public List<Pizza> Pizzas { get; }
+        private List<Pizza> _pizzas = new List<Pizza>();
 
-        public Order()
+        public List<Pizza> Pizzas
         {
-            Pizzas = new List<Pizza>();
+            get
+            {
+                return _pizzas;
+            }
         }
 
-        public void CreatePizza(string size, string crust, List<string> toppings)
+        public void CreatePizza(string name, Size size, Crust crust, List<Topping> toppings)
         {
-            Pizzas.Add(new Pizza(size, crust, toppings));
+            Pizzas.Add(new Pizza(name, size, crust, toppings));
+        }
+
+        public double CalculatePrice()
+        {
+            double price = 0;
+            foreach (var Pizza in Pizzas)
+            {
+                price += Pizza.CalculatePrice();
+            }
+            return price;
+        }
+
+        public void DisplayOrder()
+        {
+            System.Console.WriteLine($"Total Price: {CalculatePrice().ToString("C2")}");
+            for (int i = 0; i < Pizzas.Count; i++)
+            {
+                System.Console.Write(i + 1 + ": ");
+                System.Console.WriteLine(Pizzas[i]);
+                System.Console.WriteLine();
+            }
         }
     }
 }

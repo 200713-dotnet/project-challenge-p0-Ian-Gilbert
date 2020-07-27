@@ -1,53 +1,55 @@
 using System.Collections.Generic;
-using System.Text;
 
 namespace PizzaStore.Domain.Models
 {
     public class Pizza
     {
-        // fields
-        private readonly string _imageUrl;
-        private const double _diameter = 0;
-        private List<string> _toppings = new List<string>();
+        private List<Topping> _toppings = new List<Topping>();
 
-        //properties
-        public string Size { get; set; }
-        public string Crust { get; set; }
-        public List<string> Toppings
+        public string Name { get; set; }
+        public List<Topping> Toppings
         {
             get
             {
                 return _toppings;
             }
         }
+        public Crust Crust { get; }
+        public Size Size { get; }
 
         public Pizza() { }
 
-        public Pizza(string size, string crust, List<string> toppings)
+        public Pizza(string name, Size size, Crust crust, List<Topping> toppings)
         {
+            Name = name;
             Size = size;
             Crust = crust;
-            // Toppings = new List<string>();
             Toppings.AddRange(toppings);
         }
 
-        // methods
-        void AddToppings(string topping)
+        void AddToppings(Topping topping)
         {
             Toppings.Add(topping);
         }
 
+        public double CalculatePrice()
+        {
+            double price = 0;
+
+            price += Size.Price;
+            price += Crust.Price;
+            foreach (var topping in Toppings)
+            {
+                price += topping.Price;
+            }
+
+            return price;
+        }
+
         public override string ToString()
         {
-            // var sb = new StringBuilder();
-            // foreach (var t in toppings)
-            // {
-            //     sb.Append(t);
-            // }
-
-            // return $"{crust} {size}\nToppings: {sb.ToString()}";
-
-            return $"{Crust} {Size}\nToppings: {string.Join(", ", Toppings)}";
+            return $"{Name}, {Size.Name}, {Crust.Name} ----- {CalculatePrice().ToString("C2")}\n" +
+                $"Toppings: {string.Join(", ", Toppings)}";
         }
     }
 }

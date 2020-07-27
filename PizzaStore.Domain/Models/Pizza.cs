@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaStore.Domain.Models
 {
@@ -6,7 +7,7 @@ namespace PizzaStore.Domain.Models
     {
         private List<Topping> _toppings = new List<Topping>();
 
-        public string Name { get; set; }
+        public string Name { get; }
         public List<Topping> Toppings
         {
             get
@@ -14,22 +15,33 @@ namespace PizzaStore.Domain.Models
                 return _toppings;
             }
         }
-        public Crust Crust { get; }
-        public Size Size { get; }
+        public Crust Crust { get; internal set; }
+        public Size Size { get; internal set; }
 
         public Pizza() { }
 
-        public Pizza(string name, Size size, Crust crust, List<Topping> toppings)
+        public Pizza(string name, Size size, Crust crust)
         {
             Name = name;
             Size = size;
             Crust = crust;
+        }
+
+        // for creating presets
+        public Pizza(string name, List<Topping> toppings)
+        {
+            Name = name;
             Toppings.AddRange(toppings);
         }
 
-        void AddToppings(Topping topping)
+        public void AddTopping(Topping topping)
         {
             Toppings.Add(topping);
+        }
+
+        public void AddToppings(List<Topping> toppings)
+        {
+            Toppings.AddRange(toppings);
         }
 
         public double CalculatePrice()
@@ -49,7 +61,7 @@ namespace PizzaStore.Domain.Models
         public override string ToString()
         {
             return $"{Name}, {Size.Name}, {Crust.Name} ----- {CalculatePrice().ToString("C2")}\n" +
-                $"Toppings: {string.Join(", ", Toppings)}";
+                $"Toppings: {string.Join(", ", Toppings.Select(pizza => pizza.Name).ToArray())}";
         }
     }
 }

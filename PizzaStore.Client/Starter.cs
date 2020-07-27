@@ -24,13 +24,17 @@ namespace PizzaStore.Client
             return toppings;
         }
 
-        internal static void PrintMenu()
+        internal static List<Pizza> GeneratePresets()
         {
-            System.Console.WriteLine("Select 1 for Cheese Pizza");
-            System.Console.WriteLine("Select 2 for Pepperoni Pizza");
-            System.Console.WriteLine("Select 3 for Hawaiian Pizza");
-            System.Console.WriteLine("Select 4 for Custom Pizza");
-            System.Console.WriteLine("Select 5 to exit");
+            var pizzas = new List<Pizza>();
+            var toppings = GenerateToppings();
+
+            pizzas.Add(new Pizza("Cheese", new List<Topping> { toppings[0], toppings[1] }));
+            pizzas.Add(new Pizza("Pepperoni", new List<Topping> { toppings[0], toppings[1], toppings[2] }));
+            pizzas.Add(new Pizza("Hawaiian", new List<Topping> { toppings[0], toppings[1], toppings[5], toppings[6] }));
+            pizzas.Add(new Pizza("Custom", new List<Topping> { }));
+
+            return pizzas;
         }
 
         internal static List<Size> GenerateSizes()

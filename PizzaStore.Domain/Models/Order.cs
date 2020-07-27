@@ -14,9 +14,11 @@ namespace PizzaStore.Domain.Models
             }
         }
 
-        public void CreatePizza(string name, Size size, Crust crust, List<Topping> toppings)
+        public Pizza CreatePizza(string name, Size size, Crust crust)
         {
-            Pizzas.Add(new Pizza(name, size, crust, toppings));
+            var pizza = new Pizza(name, size, crust);
+            Pizzas.Add(pizza);
+            return pizza;
         }
 
         public double CalculatePrice()

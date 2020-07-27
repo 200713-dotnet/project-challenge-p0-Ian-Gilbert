@@ -11,7 +11,12 @@ namespace PizzaStore.Client
             Welcome();
 
             var user = new User();
-            var store = new Store();
+            var store = new Store(
+                Starter.GenerateToppings(),
+                Starter.GenerateSizes(),
+                Starter.GenerateCrusts(),
+                Starter.GeneratePresets()
+            );
             var order = store.CreateOrder(user);
 
             try
@@ -33,68 +38,42 @@ namespace PizzaStore.Client
 
         static void OrderPizzas(Order cart, User user, Store store)
         {
-            SelectPizza(cart);
+            SelectPizza(cart, user, store);
 
             UserOptions(cart, user, store);
 
         }
 
-        private static void SelectPizza(Order cart)
+        private static void SelectPizza(Order cart, User user1, Store store)
         {
-            Starter.PrintMenu();
+            store.ViewMenu();
 
             var exit = false;
             do
             {
                 int selection;
                 System.Console.Write("\nMake a selection: ");
-                if (!int.TryParse(Console.ReadLine(), out selection) || selection < 1 || selection > 6)
+                if (!int.TryParse(Console.ReadLine(), out selection)
+                    || selection < 1
+                    || selection > store.PizzaPresets.Count
+                )
                 {
                     System.Console.WriteLine("Whoops, that wasn't an option!\n");
                     continue;
                 }
 
-                switch (selection)
+                var pizza = store.PizzaPresets[selection - 1];
+                System.Console.WriteLine($"{pizza.Name} Pizza selected!");
+                store.AddSize(GetUserSize(store), pizza);
+                store.AddCrust(GetUserCrust(store), pizza);
+                if (pizza.Name == "Custom")
                 {
-                    case 1:
-                        System.Console.WriteLine("Cheese pizza selected");
-                        var toppings = new List<Topping>{
-                            new Topping("Tomato Sauce", 0.25),
-                            new Topping("Cheese", 0.25)
-                        };
-                        cart.CreatePizza("Cheese", GetUserSize(), GetUserCrust(), toppings);
-                        System.Console.WriteLine("added Cheese Pizza");
-                        return;
-                    case 2:
-                        System.Console.WriteLine("Pepperoni pizza selected");
-                        toppings = new List<Topping>{
-                            new Topping("Tomato Sauce", 0.25),
-                            new Topping("Cheese", 0.25),
-                            new Topping("Pepperoni", 0.50)
-                        };
-                        cart.CreatePizza("Pepperoni", GetUserSize(), GetUserCrust(), toppings);
-                        System.Console.WriteLine("added Pepperoni Pizza");
-                        return;
-                    case 3:
-                        System.Console.WriteLine("Hawaiian pizza selected");
-                        toppings = new List<Topping>{
-                            new Topping("Tomato Sauce", 0.25),
-                            new Topping("Cheese", 0.25),
-                            new Topping("Ham", 0.50),
-                            new Topping("Pineapple", 0.50)
-                        };
-                        cart.CreatePizza("Hawaiian", GetUserSize(), GetUserCrust(), toppings);
-                        System.Console.WriteLine("added Hawaiian Pizza");
-                        return;
-                    case 4:
-                        System.Console.WriteLine("Custom pizza selected");
-                        cart.CreatePizza("Custom", GetUserSize(), GetUserCrust(), GetUserToppings());
-                        System.Console.WriteLine("added Custom Pizza");
-                        return;
-                    case 6:
-                        exit = true;
-                        break;
+                    store.AddToppings(GetUserToppings(store), pizza);
                 }
+                cart.Pizzas.Add(pizza);
+                System.Console.WriteLine($"{pizza.Name} Pizza added to your cart!");
+                return;
+
             } while (!exit);
         }
 
@@ -119,7 +98,7 @@ namespace PizzaStore.Client
                 switch (selection)
                 {
                     case 1:
-                        SelectPizza(cart);
+                        SelectPizza(cart, user, store);
                         break;
                     case 2:
                         int PizzaIndex;
@@ -145,7 +124,7 @@ namespace PizzaStore.Client
                         user.Orders.Remove(cart);
                         store.Orders.Remove(cart);
                         exit = true;
-                        System.Console.WriteLine("Goodbye.");
+                        System.Console.WriteLine("Order cancelled. Goodbye.");
                         break;
                     case 4:
                         // store order in db
@@ -159,18 +138,14 @@ namespace PizzaStore.Client
             } while (!exit);
         }
 
-        private static List<Topping> GetUserToppings()
+        private static List<Topping> GetUserToppings(Store store)
         {
             var ToppingOptions = Starter.GenerateToppings();
             var UserToppings = new List<Topping>();
             var exit = false;
 
             System.Console.WriteLine("\nSelect 2 - 5 toppings from the list below. Press 11 to save your choices.");
-            for (int i = 0; i < ToppingOptions.Count; i++)
-            {
-                System.Console.WriteLine($"{i + 1}: {ToppingOptions[i]}");
-            }
-            System.Console.WriteLine($"{ToppingOptions.Count + 1}: Exit");
+            store.ViewToppings();
 
             do
             {
@@ -246,15 +221,12 @@ namespace PizzaStore.Client
             return UserToppings;
         }
 
-        private static Crust GetUserCrust()
+        private static Crust GetUserCrust(Store store)
         {
             var CrustOptions = Starter.GenerateCrusts();
 
             System.Console.WriteLine();
-            for (int i = 0; i < CrustOptions.Count; i++)
-            {
-                System.Console.WriteLine($"{i + 1}: {CrustOptions[i]}");
-            }
+            store.ViewCrusts();
 
             do
             {
@@ -283,15 +255,12 @@ namespace PizzaStore.Client
             } while (true);
         }
 
-        private static Size GetUserSize()
+        private static Size GetUserSize(Store store)
         {
             var SizeOptions = Starter.GenerateSizes();
 
             System.Console.WriteLine();
-            for (int i = 0; i < SizeOptions.Count; i++)
-            {
-                System.Console.WriteLine($"{i + 1}: {SizeOptions[i]}");
-            }
+            store.ViewSizes();
 
             do
             {

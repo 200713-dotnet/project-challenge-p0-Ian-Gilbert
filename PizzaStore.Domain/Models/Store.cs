@@ -6,49 +6,19 @@ namespace PizzaStore.Domain.Models
     public class Store
     {
         private List<Order> _orders = new List<Order>();
-        public List<Order> Orders
-        {
-            get
-            {
-                return _orders;
-            }
-        }
+        public List<Order> Orders { get { return _orders; } }
 
         private List<Topping> _toppings = new List<Topping>();
-        public List<Topping> Toppings
-        {
-            get
-            {
-                return _toppings;
-            }
-        }
+        public List<Topping> Toppings { get { return _toppings; } }
 
         private List<Pizza> _presets = new List<Pizza>();
-        public List<Pizza> PizzaPresets
-        {
-            get
-            {
-                return _presets;
-            }
-        }
+        public List<Pizza> PizzaPresets { get { return _presets; } }
 
         private List<Size> _sizes = new List<Size>();
-        public List<Size> Sizes
-        {
-            get
-            {
-                return _sizes;
-            }
-        }
+        public List<Size> Sizes { get { return _sizes; } }
 
         private List<Crust> _crusts = new List<Crust>();
-        public List<Crust> Crusts
-        {
-            get
-            {
-                return _crusts;
-            }
-        }
+        public List<Crust> Crusts { get { return _crusts; } }
 
         public string Name { get; set; }
 

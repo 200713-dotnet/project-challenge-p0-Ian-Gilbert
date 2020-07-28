@@ -71,7 +71,7 @@ CREATE TABLE Orders.Orders
     UserSubmittedId INT NOT NULL,
     StoreSubmittedId INT NOT NULL,
     Price MONEY NOT NULL,
-    PurchaseDate DATETIME2(0) NOT NULL,
+    PurchaseDate DATETIME2(0) NOT NULL DEFAULT GetDate(),
     CONSTRAINT PK_OrderId PRIMARY KEY (OrderId),
     CONSTRAINT FK_UserSubmittedId FOREIGN KEY (UserSubmittedId) REFERENCES Users.Users(UserId),
     CONSTRAINT FK_StoreSubmittedId FOREIGN KEY (StoreSubmittedId) REFERENCES Store.Store(StoreId)
@@ -86,6 +86,7 @@ CREATE TABLE Orders.PizzaOrders
     CONSTRAINT FK_PizzaId FOREIGN KEY (PizzaId) REFERENCES Pizza.Pizza(PizzaId),
     CONSTRAINT FK_OrderId FOREIGN KEY (OrderId) REFERENCES Orders.Orders(OrderId)
 );
+
 
 CREATE TABLE Users.Users
 (
@@ -195,3 +196,34 @@ INSERT INTO Store.Store
     ([Name])
 VALUES('Store2');
 GO
+
+
+
+SELECT *
+FROM Pizza.Pizza;
+
+SELECT *
+FROM Orders.Orders;
+
+SELECT *
+FROM Orders.PizzaOrders;
+
+SELECT *
+FROM Pizza.PizzaTopping;
+
+
+
+SELECT *
+FROM Pizza.Crust;
+
+SELECT *
+FROM Pizza.[Size];
+
+SELECT *
+FROM Pizza.Toppings;
+
+SELECT *
+FROM Users.Users;
+
+SELECT *
+FROM Store.Store;

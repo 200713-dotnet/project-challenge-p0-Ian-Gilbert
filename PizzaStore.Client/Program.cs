@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PizzaStore.Domain.Models;
+using PizzaStore.Storing.Repositories;
 
 namespace PizzaStore.Client
 {
@@ -10,13 +11,16 @@ namespace PizzaStore.Client
         {
             Welcome();
 
-            var user = new User();
+            Repository db = new Repository();
+
+            var user = new User() { Name = "Ian" };
             var store = new Store(
-                Starter.GenerateToppings(),
-                Starter.GenerateSizes(),
-                Starter.GenerateCrusts(),
+                db.ReadToppings(),
+                db.ReadSizes(),
+                db.ReadCrusts(),
                 Starter.GeneratePresets()
             );
+            store.Name = "Store1";
             var order = store.CreateOrder(user);
 
             try
@@ -129,7 +133,8 @@ namespace PizzaStore.Client
                         System.Console.WriteLine("Order cancelled. Goodbye.");
                         break;
                     case 4:
-                        // store order in db
+                        var db = new Repository();
+                        db.CreateOrder(cart, user, store);
                         exit = true;
                         System.Console.WriteLine("Order submitted!");
                         break;
@@ -142,7 +147,6 @@ namespace PizzaStore.Client
 
         private static List<Topping> GetUserToppings(Store store)
         {
-            var ToppingOptions = Starter.GenerateToppings();
             var UserToppings = new List<Topping>();
             var exit = false;
 
@@ -155,62 +159,30 @@ namespace PizzaStore.Client
                 System.Console.Write("\nYour choice: ");
                 int.TryParse(Console.ReadLine(), out selection);
 
-                switch (selection)
+                // If user tries to exit
+                if (selection == store.Toppings.Count + 1)
                 {
-                    case 1:
-                        UserToppings.Add(ToppingOptions[0]);
-                        System.Console.WriteLine("Tomato Sauce added");
-                        break;
-                    case 2:
-                        UserToppings.Add(ToppingOptions[1]);
-                        System.Console.WriteLine("Cheese added");
-                        break;
-                    case 3:
-                        UserToppings.Add(ToppingOptions[2]);
-                        System.Console.WriteLine("Pepperoni added");
-                        break;
-                    case 4:
-                        UserToppings.Add(ToppingOptions[3]);
-                        System.Console.WriteLine("Sausage added");
-                        break;
-                    case 5:
-                        UserToppings.Add(ToppingOptions[4]);
-                        System.Console.WriteLine("Olives added");
-                        break;
-                    case 6:
-                        UserToppings.Add(ToppingOptions[5]);
-                        System.Console.WriteLine("Ham added");
-                        break;
-                    case 7:
-                        UserToppings.Add(ToppingOptions[6]);
-                        System.Console.WriteLine("Pineapple added");
-                        break;
-                    case 8:
-                        UserToppings.Add(ToppingOptions[7]);
-                        System.Console.WriteLine("Mushrooms added");
-                        break;
-                    case 9:
-                        UserToppings.Add(ToppingOptions[8]);
-                        System.Console.WriteLine("Mozzarella added");
-                        break;
-                    case 10:
-                        UserToppings.Add(ToppingOptions[9]);
-                        System.Console.WriteLine("Basil added");
-                        break;
-                    case 11:
-                        if (UserToppings.Count > 1)
-                        {
-                            exit = true;
-                            System.Console.WriteLine("Toppings selected!");
-                        }
-                        else
-                        {
-                            System.Console.WriteLine("You need to select at least 2 toppings");
-                        }
-                        break;
-                    default:
-                        System.Console.WriteLine("Whoops, that wasn't an option!");
-                        break;
+                    if (UserToppings.Count > 1)
+                    {
+                        exit = true;
+                        System.Console.WriteLine("Toppings selected!");
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("You need to select at least 2 toppings");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        UserToppings.Add(store.Toppings[selection - 1]);
+                    }
+                    catch (System.ArgumentOutOfRangeException)
+                    {
+
+                        System.Console.WriteLine("That doesn't seem to be one of the options.");
+                    }
                 }
 
                 if (UserToppings.Count == 5)
@@ -225,8 +197,6 @@ namespace PizzaStore.Client
 
         private static Crust GetUserCrust(Store store)
         {
-            var CrustOptions = Starter.GenerateCrusts();
-
             System.Console.WriteLine();
             store.ViewCrusts();
 
@@ -236,31 +206,20 @@ namespace PizzaStore.Client
                 System.Console.Write("\nYour choice: ");
                 int.TryParse(Console.ReadLine(), out selection);
 
-                switch (selection)
+                try
                 {
-                    case 1:
-                        System.Console.WriteLine("Thin crust selected");
-                        return CrustOptions[0];
-                    case 2:
-                        System.Console.WriteLine("Stuffed crust selected");
-                        return CrustOptions[1];
-                    case 3:
-                        System.Console.WriteLine("Garlic crust selected");
-                        return CrustOptions[2];
-                    case 4:
-                        System.Console.WriteLine("Garlic stuffed crust selected");
-                        return CrustOptions[3];
-                    default:
-                        System.Console.WriteLine("Whoops, that wasn't an option!");
-                        break;
+                    return store.Crusts[selection - 1];
+                }
+                catch (System.ArgumentOutOfRangeException)
+                {
+
+                    System.Console.WriteLine("That doesn't seem to be one of the options.");
                 }
             } while (true);
         }
 
         private static Size GetUserSize(Store store)
         {
-            var SizeOptions = Starter.GenerateSizes();
-
             System.Console.WriteLine();
             store.ViewSizes();
 
@@ -270,20 +229,14 @@ namespace PizzaStore.Client
                 System.Console.Write("\nYour choice: ");
                 int.TryParse(Console.ReadLine(), out selection);
 
-                switch (selection)
+                try
                 {
-                    case 1:
-                        System.Console.WriteLine("Small pizza selected");
-                        return SizeOptions[0];
-                    case 2:
-                        System.Console.WriteLine("Medium pizza selected");
-                        return SizeOptions[1];
-                    case 3:
-                        System.Console.WriteLine("Large pizza selected");
-                        return SizeOptions[2];
-                    default:
-                        System.Console.WriteLine("Whoops, that wasn't an option!");
-                        break;
+                    return store.Sizes[selection - 1];
+                }
+                catch (System.ArgumentOutOfRangeException)
+                {
+
+                    System.Console.WriteLine("That doesn't seem to be one of the options.");
                 }
             } while (true);
         }

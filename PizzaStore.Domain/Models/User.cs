@@ -7,12 +7,6 @@ namespace PizzaStore.Domain.Models
         private List<Order> _orders = new List<Order>();
         public string Name { get; set; }
 
-        public List<Order> Orders
-        {
-            get
-            {
-                return _orders;
-            }
-        }
+        public List<Order> Orders { get { return _orders; } }
     }
 }

@@ -7,13 +7,7 @@ namespace PizzaStore.Domain.Models
     {
         private List<Pizza> _pizzas = new List<Pizza>();
 
-        public List<Pizza> Pizzas
-        {
-            get
-            {
-                return _pizzas;
-            }
-        }
+        public List<Pizza> Pizzas { get { return _pizzas; } }
 
         public Pizza CreatePizza(string name, List<Topping> toppings)
         {

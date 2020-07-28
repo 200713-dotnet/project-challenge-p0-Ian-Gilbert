@@ -41,7 +41,6 @@ namespace PizzaStore.Client
             SelectPizza(cart, user, store);
 
             UserOptions(cart, user, store);
-
         }
 
         private static void SelectPizza(Order cart, User user1, Store store)
@@ -62,7 +61,11 @@ namespace PizzaStore.Client
                     continue;
                 }
 
-                var pizza = store.PizzaPresets[selection - 1];
+                var pizza = store.CreatePizza(
+                    store.PizzaPresets[selection - 1].Name,
+                    store.PizzaPresets[selection - 1].Toppings,
+                    cart
+                );
                 System.Console.WriteLine($"{pizza.Name} Pizza selected!");
                 store.AddSize(GetUserSize(store), pizza);
                 store.AddCrust(GetUserCrust(store), pizza);
@@ -70,7 +73,6 @@ namespace PizzaStore.Client
                 {
                     store.AddToppings(GetUserToppings(store), pizza);
                 }
-                cart.Pizzas.Add(pizza);
                 System.Console.WriteLine($"{pizza.Name} Pizza added to your cart!");
                 return;
 

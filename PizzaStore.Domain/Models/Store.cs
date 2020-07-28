@@ -51,7 +51,6 @@ namespace PizzaStore.Domain.Models
         }
 
         public string Name { get; set; }
-        public string Slogan { get; set; }
 
         public Store() { }
 
@@ -63,10 +62,9 @@ namespace PizzaStore.Domain.Models
             PizzaPresets.AddRange(presets);
         }
 
-        public Store(string name, string slogan)
+        public Store(string name)
         {
             Name = name;
-            Slogan = slogan;
         }
 
         public Order CreateOrder(User user)
@@ -88,6 +86,11 @@ namespace PizzaStore.Domain.Models
             {
                 GC.Collect();
             }
+        }
+
+        public Pizza CreatePizza(string name, List<Topping> toppings, Order order)
+        {
+            return order.CreatePizza(name, toppings);
         }
 
         public void ViewMenu()

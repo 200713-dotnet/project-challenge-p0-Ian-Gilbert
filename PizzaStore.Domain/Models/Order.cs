@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaStore.Domain.Models
 {
@@ -14,21 +15,16 @@ namespace PizzaStore.Domain.Models
             }
         }
 
-        public Pizza CreatePizza(string name, Size size, Crust crust)
+        public Pizza CreatePizza(string name, List<Topping> toppings)
         {
-            var pizza = new Pizza(name, size, crust);
+            var pizza = new Pizza(name, toppings);
             Pizzas.Add(pizza);
             return pizza;
         }
 
         public double CalculatePrice()
         {
-            double price = 0;
-            foreach (var Pizza in Pizzas)
-            {
-                price += Pizza.CalculatePrice();
-            }
-            return price;
+            return Pizzas.Sum(Pizza => Pizza.CalculatePrice());
         }
 
         public void DisplayOrder()

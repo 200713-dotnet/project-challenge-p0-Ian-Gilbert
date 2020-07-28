@@ -46,22 +46,13 @@ namespace PizzaStore.Domain.Models
 
         public double CalculatePrice()
         {
-            double price = 0;
-
-            price += Size.Price;
-            price += Crust.Price;
-            foreach (var topping in Toppings)
-            {
-                price += topping.Price;
-            }
-
-            return price;
+            return Size.Price + Crust.Price + Toppings.Sum(topping => topping.Price);
         }
 
         public override string ToString()
         {
             return $"{Name}, {Size.Name}, {Crust.Name} ----- {CalculatePrice().ToString("C2")}\n" +
-                $"Toppings: {string.Join(", ", Toppings.Select(pizza => pizza.Name).ToArray())}";
+                $"Toppings: {string.Join(", ", Toppings.Select(topping => topping.Name).ToArray())}";
         }
     }
 }

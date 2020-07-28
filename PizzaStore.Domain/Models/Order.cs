@@ -22,7 +22,7 @@ namespace PizzaStore.Domain.Models
             return pizza;
         }
 
-        public double CalculatePrice()
+        public decimal CalculatePrice()
         {
             return Pizzas.Sum(Pizza => Pizza.CalculatePrice());
         }

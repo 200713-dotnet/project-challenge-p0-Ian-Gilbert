@@ -3,11 +3,11 @@ namespace PizzaStore.Domain.Models
     public class Crust
     {
         public string Name { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public Crust() { }
 
-        public Crust(string name, double price)
+        public Crust(string name, decimal price)
         {
             Name = name;
             Price = price;

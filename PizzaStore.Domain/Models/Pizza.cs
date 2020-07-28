@@ -44,7 +44,7 @@ namespace PizzaStore.Domain.Models
             Toppings.AddRange(toppings);
         }
 
-        public double CalculatePrice()
+        public decimal CalculatePrice()
         {
             return Size.Price + Crust.Price + Toppings.Sum(topping => topping.Price);
         }

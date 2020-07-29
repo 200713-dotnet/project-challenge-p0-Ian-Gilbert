@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using PizzaStore.Domain.Models;
 using PizzaStore.Storing.Repositories;
 
@@ -9,6 +8,7 @@ namespace PizzaStore.Client
     {
         private static Repository _db = new Repository();
 
+        // entrypoint for store story
         public static void StoreOptions(Store store)
         {
             var exit = false;
@@ -44,6 +44,7 @@ namespace PizzaStore.Client
             throw new NotImplementedException();
         }
 
+        // select whether or not to filter by user
         private static void ViewOrderHistory(Store store)
         {
             System.Console.WriteLine("\nWould you like to see all orders, or only see orders placed by a specific user?");
@@ -57,14 +58,15 @@ namespace PizzaStore.Client
             switch (selection)
             {
                 case 1:
-                    ViewAllOrders(store);
+                    ViewAllOrders(store); // #nofilter
                     break;
                 case 2:
-                    ViewUserOrders(store);
+                    ViewUserOrders(store); // select a user and filter
                     break;
             }
         }
 
+        // select a user and filter
         private static void ViewUserOrders(Store store)
         {
             var userList = _db.ReadAllUsers();
@@ -84,6 +86,7 @@ namespace PizzaStore.Client
             _db.ViewOrdersByStore(store, user);
         }
 
+        // #nofilter
         private static void ViewAllOrders(Store store)
         {
             _db.ViewOrdersByStore(store);

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using PizzaStore.Domain.Models;
 using PizzaStore.Storing.Repositories;
 
 namespace PizzaStore.Client
@@ -23,39 +21,28 @@ namespace PizzaStore.Client
 
             switch (selection)
             {
+                // Login user
                 case 1:
                     System.Console.Write("Your name: ");
-                    var name = Console.ReadLine();
-                    var user = _db.ReadUser(name);
+                    var name = Console.ReadLine(); // user enters name
+
+                    var user = _db.ReadUser(name); // get user from database
                     System.Console.WriteLine($"\nHello {user.Name}!");
-                    UserStory.UserOptions(user);
+
+                    UserStory.UserOptions(user); // begin user story
                     break;
+
+                // Login store
                 case 2:
                     System.Console.Write("Your name: ");
-                    name = Console.ReadLine();
-                    var store = _db.ReadPizzaStore(name);
+                    name = Console.ReadLine(); // user enters store name
+
+                    var store = _db.ReadPizzaStore(name); // get store from database
                     System.Console.WriteLine($"\nHello {store.Name}!");
-                    StoreStory.StoreOptions(store);
+
+                    StoreStory.StoreOptions(store); // begin store story
                     break;
             }
-
-            // Repository db = new Repository();
-
-            // var user = new User() { Name = "Ian" };
-            // var store = new Store(
-            //     db.ReadToppings(),
-            //     db.ReadSizes(),
-            //     db.ReadCrusts(),
-            //     Starter.GeneratePresets()
-            // );
-            // store.Name = "Store1";
-            // var order = store.CreateOrder(user);
-
-            // db.ViewOrdersByUser(user);
-            // System.Console.WriteLine();
-            // db.ViewOrdersByStore(store);
-            // System.Console.WriteLine();
-            // db.ViewOrdersByStore(store, user);
         }
     }
 }

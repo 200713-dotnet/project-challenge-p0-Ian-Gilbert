@@ -93,7 +93,7 @@ namespace PizzaStore.Domain.Models
             {
                 System.Console.WriteLine($"{i + 1}: {Toppings[i]}");
             }
-            System.Console.WriteLine($"{Toppings.Count + 1}: Exit");
+            System.Console.WriteLine($"{Toppings.Count + 1}: Finish selecting toppings");
         }
 
         public void AddSize(Size size, Pizza pizza)

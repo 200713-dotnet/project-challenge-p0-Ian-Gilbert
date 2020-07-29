@@ -124,7 +124,17 @@ namespace PizzaStore.Client
                 {
                     store.AddToppings(GetUserToppings(store), pizza);
                 }
-                System.Console.WriteLine($"{pizza.Name} Pizza added to your cart!");
+
+                // if order exceeds the $250 limit, remove the last pizza
+                if (cart.CalculatePrice() > 250)
+                {
+                    cart.Pizzas.Remove(pizza);
+                    System.Console.WriteLine("Sorry, this pizza exceeds the $250 order limit.");
+                }
+                else
+                {
+                    System.Console.WriteLine($"{pizza.Name} Pizza added to your cart!");
+                }
                 return;
 
             } while (true);

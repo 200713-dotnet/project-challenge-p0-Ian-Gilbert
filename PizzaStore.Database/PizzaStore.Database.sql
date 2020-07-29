@@ -19,14 +19,22 @@ GO
 CREATE SCHEMA Store;
 GO
 
+-- When recreating all the tables:
+-- load Crust, Size, Toppings, Users, Store,
+-- then Orders,
+-- then Pizza,
+-- then PizzaTopping
+
 CREATE TABLE Pizza.Pizza
 (
     PizzaId INT NOT NULL IDENTITY(1, 1),
+    OrderId INT NOT NULL,
     CrustId TINYINT NULL,
     SizeId TINYINT NULL,
     [Name] NVARCHAR(250) NOT NULL,
     Price MONEY NOT NULL,
     CONSTRAINT PK_PizzaId PRIMARY KEY (PizzaId),
+    CONSTRAINT FK_OrderId FOREIGN KEY (OrderId) REFERENCES Orders.Orders(OrderId),
     CONSTRAINT FK_CrustId FOREIGN KEY (CrustId) REFERENCES Pizza.Crust(CrustId),
     CONSTRAINT FK_SizeId FOREIGN KEY (SizeId) REFERENCES Pizza.Size(SizeId),
 );
@@ -76,17 +84,6 @@ CREATE TABLE Orders.Orders
     CONSTRAINT FK_UserSubmittedId FOREIGN KEY (UserSubmittedId) REFERENCES Users.Users(UserId),
     CONSTRAINT FK_StoreSubmittedId FOREIGN KEY (StoreSubmittedId) REFERENCES Store.Store(StoreId)
 );
-
-CREATE TABLE Orders.PizzaOrders
-(
-    PizzaOrdersId INT NOT NULL IDENTITY(1, 1),
-    PizzaId INT NOT NULL,
-    OrderId INT NOT NULL,
-    CONSTRAINT PK_PizzaOrdersId PRIMARY KEY (PizzaOrdersId),
-    CONSTRAINT FK_PizzaId FOREIGN KEY (PizzaId) REFERENCES Pizza.Pizza(PizzaId),
-    CONSTRAINT FK_OrderId FOREIGN KEY (OrderId) REFERENCES Orders.Orders(OrderId)
-);
-
 
 CREATE TABLE Users.Users
 (
@@ -204,9 +201,6 @@ FROM Pizza.Pizza;
 
 SELECT *
 FROM Orders.Orders;
-
-SELECT *
-FROM Orders.PizzaOrders;
 
 SELECT *
 FROM Pizza.PizzaTopping;

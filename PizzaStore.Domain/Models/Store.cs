@@ -96,11 +96,6 @@ namespace PizzaStore.Domain.Models
             System.Console.WriteLine($"{Toppings.Count + 1}: Exit");
         }
 
-        public void ViewOrders()
-        {
-
-        }
-
         public void AddSize(Size size, Pizza pizza)
         {
             pizza.Size = size;
